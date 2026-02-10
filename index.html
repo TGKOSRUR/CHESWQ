@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHESWQ | КРОВАВАЯ ЛУНА</title>
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🩸</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        :root {
+            --blood-dark: #0a0101;
+            --blood-red: #1a0000;
+            --crimson: #2d0000;
+            --scarlet: #5d0000;
+            --ruby: #8a0000;
+            --neon-red: #ff0000;
+            --hot-pink: #ff0066;
+            --glow-color: rgba(255, 0, 0, 0.5);
+        }
+
+        body {
+            background: #0a0101;
+            color: #ffe0e0;
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ФОН С ПЕРСОНАЖЕМ */
+        .character-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .character-bg img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 90%;
+            max-height: 90vh;
+            filter: 
+                brightness(0.8) 
+                contrast(1.3) 
+                drop-shadow(0 0 30px rgba(255, 0, 0, 0.3));
+            object-fit: contain;
+        }
+
+        /* ПК ВЕРСИЯ */
+        @media (min-width: 769px) {
+            .character-bg img {
+                width: auto;
+                height: 85vh;
+            }
+        }
+
+        /* МОБИЛЬНАЯ ВЕРСИЯ */
+        @media (max-width: 768px) {
+            .character-bg img {
+                width: 100%;
+                height: auto;
+                max-height: 60vh;
+                top: 55%;
+            }
+        }
+
+        /* ПАРТИКЛЫ */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
+            background: rgba(10, 1, 1, 0.85);
+            backdrop-filter: blur(5px);
+            border-radius: 10px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* ХЕДЕР */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid rgba(255, 0, 0, 0.3);
+        }
+
+        .logo {
+            font-size: 1.8em;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--neon-red), var(--hot-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: #ffb3b3;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9em;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        nav a:hover, nav a.active {
+            background: rgba(255, 0, 0, 0.2);
+            color: #ffffff;
+        }
+
+        /* ГЛАВНЫЙ БАННЕР */
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            margin-bottom: 40px;
+            background: rgba(26, 0, 0, 0.5);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 0, 0, 0.2);
+        }
+
+        .hero h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, #ffffff, #ff9999);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        @media (min-width: 769px) {
+            .hero h1 {
+                font-size: 3em;
+            }
+        }
+
+        .hero-subtitle {
+            font-size: 1.2em;
+            color: #ffcccc;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.1em;
+            color: #ffb3b3;
+            max-width: 800px;
+            margin: 0 auto 25px;
+            line-height: 1.6;
+        }
+
+        /* КНОПКИ */
+        .cta-button, .donate-button {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--scarlet), var(--neon-red));
+            color: #ffffff;
+            padding: 14px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1em;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4);
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:hover, .donate-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.6);
+            background: linear-gradient(135deg, var(--neon-red), var(--hot-pink));
+        }
+
+        /* СЕТКА КОНТЕНТА */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        @media (min-width: 769px) {
+            .content-grid {
+                grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+                gap: 30px;
+            }
+        }
+
+        .card {
+            background: rgba(26, 0, 0, 0.7);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            padding: 25px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .card h2 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            color: #ffffff;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--neon-red);
+        }
+
+        /* БЛОК СТРИМА */
+        .stream-container {
+            text-align: center;
+            padding: 25px;
+            margin-top: 20px;
+            background: rgba(45, 0, 0, 0.6);
+            border-radius: 10px;
+        }
+
+        .stream-container h3 {
+            color: #ffffff;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .stream-container p {
+            color: #ffb3b3;
+            margin-bottom: 20px;
+        }
+
+        /* ССЫЛКИ */
+        .link-list {
+            margin-top: 20px;
+        }
+
+        .link-item {
+            display: block;
+            background: rgba(45, 0, 0, 0.6);
+            border-left: 4px solid var(--neon-red);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 0 8px 8px 0;
+            text-decoration: none;
+            color: #ffcccc;
+            transition: all 0.3s ease;
+        }
+
+        .link-item:hover {
+            background: rgba(45, 0, 0, 0.8);
+            transform: translateX(5px);
+            color: #ffffff;
+        }
+
+        .link-item h3 {
+            font-size: 1.1em;
+            margin-bottom: 5px;
+            color: #ffffff;
+        }
+
+        /* УСЛУГИ */
+        .services {
+            margin: 50px 0;
+        }
+
+        .services h2 {
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 30px;
+            color: #ffffff;
+            text-transform: uppercase;
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .service-card {
+            background: rgba(45, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 0, 0, 0.6);
+        }
+
+        .service-card h3 {
+            color: #ffffff;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .service-card .price {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--neon-red);
+            margin: 15px 0;
+        }
+
+        .service-card p {
+            color: #ffb3b3;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        /* ДОНАТ */
+        .donate-section {
+            text-align: center;
+            margin: 50px 0;
+            padding: 40px 20px;
+            background: rgba(26, 0, 0, 0.7);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+        }
+
+        .donate-section h2 {
+            color: #ffffff;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .donate-section > p {
+            color: #ffb3b3;
+            max-width: 700px;
+            margin: 0 auto 25px;
+            line-height: 1.6;
+        }
+
+        /* ФУТЕР */
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 50px;
+            border-top: 1px solid rgba(255, 0, 0, 0.2);
+            color: #b38585;
+            font-size: 0.9em;
+            background: rgba(10, 1, 1, 0.8);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #ffb3b3;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #ffffff;
+        }
+
+        /* АДАПТИВНОСТЬ */
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 0 15px;
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            nav ul {
+                justify-content: center;
+                gap: 10px;
+            }
+            
+            nav a {
+                padding: 6px 12px;
+                font-size: 0.85em;
+            }
+            
+            .hero {
+                padding: 40px 15px;
+            }
+            
+            .hero h1 {
+                font-size: 1.8em;
+            }
+            
+            .hero-subtitle {
+                font-size: 1em;
+            }
+            
+            .cta-button, .donate-button {
+                padding: 12px 30px;
+                font-size: 0.9em;
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .service-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Фон с персонажем -->
+    <div class="character-bg">
+        <img src="https://zefirka.club/uploads/posts/2023-01/1673064610_2-zefirka-club-p-anime-oboi-ubiitsa-akame-2.png" alt="Аниме персонаж Акаме" loading="lazy">
+    </div>
+
+    <!-- Canvas для частиц -->
+    <div id="particles-js"></div>
+
+    <div class="container">
+        <header>
+            <a href="#" class="logo">CHESWQ</a>
+            <nav>
+                <ul>
+                    <li><a href="#mission" class="active">ТЕНЬ</a></li>
+                    <li><a href="#live">ЭФИР</a></li>
+                    <li><a href="#links">СВЯЗЬ</a></li>
+                    <li><a href="#services">ЖЕРТВА</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <section class="hero" id="mission">
+            <h1>КРОВАВАЯ ЛУНА</h1>
+            <div class="hero-subtitle">ТРАНСЛЯЦИИ В БАГРОВЫХ ТОНАХ</div>
+            <p>Погрузитесь в мир, где каждый стрим — это ритуал. Мастерство игры, окутанное аурой таинственности и крови. Присоединяйтесь к тем, кто не боится тени.</p>
+            <a href="#live" class="cta-button">ВОЙТИ В ЭФИР</a>
+        </section>
+
+        <div class="content-grid">
+            <div class="card" id="live">
+                <h2>БАГРОВЫЙ ЭФИР</h2>
+                <p>Прямая трансляция из самого сердца тьмы. Кадры, пропитанные напряжением и мастерством. Подключайтесь к кровавому действу.</p>
+                <div class="stream-container">
+                    <h3>СТРИМ НА VK LIVE</h3>
+                    <p>Нажмите кнопку, чтобы стать частью ритуала. Откроется в новом окне на платформе VK Video.</p>
+                    <a href="https://live.vkvideo.ru/tgk_s3xyem" class="cta-button" target="_blank" rel="noopener noreferrer">▶ СМОТРЕТЬ КРОВОПРОЛИТИЕ</a>
+                </div>
+                <p style="margin-top: 15px; color: #ffb3b3; font-size: 0.9em;">СТАТУС: <span style="color:#ffcccc;">В ЭФИРЕ</span> // ЖЕРТВ: 16</p>
+            </div>
+
+            <div class="card" id="links">
+                <h2>КАНАЛЫ СВЯЗИ</h2>
+                <p>Пути, по которым можно достичь тени. Каналы для общения, анонсов и поддержки кровавого ритуала.</p>
+                <div class="link-list">
+                    <a href="https://t.me/tgkCHESW" class="link-item" target="_blank" rel="noopener noreferrer">
+                        <h3>ТЕЛЕГРАМ-ШЁПОТ</h3>
+                        <p>Тайный канал для избранных. 44 приверженца тени.</p>
+                    </a>
+                    <a href="https://www.donationalerts.com/r/chesw_" class="link-item" target="_blank" rel="noopener noreferrer">
+                        <h3>ЖЕРТВОПРИНОШЕНИЕ</h3>
+                        <p>Поддержите кровавый ритуал своими дарами.</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <section class="services" id="services">
+            <h2>КРОВАВЫЕ ДАРЫ</h2>
+            <div class="service-grid">
+                <div class="service-card"><h3>ВЗВОД 3 БОЯ</h3><p>Кровавое сопровождение в трёх жертвоприношениях</p><div class="price">150 ₽</div></div>
+                <div class="service-card"><h3>РАЗБОР АККАУНТА</h3><p>Анализ статистики, пропитанный кровью</p><div class="price">150 ₽</div></div>
+                <div class="service-card"><h3>АНАЛИЗ РЕПЛЕЯ</h3><p>Кровавый разбор записи жертвоприношения</p><div class="price">250 ₽</div></div>
+                <div class="service-card"><h3>PVP (ДО 3 ПОБЕД)</h3><p>Гарантированная серия кровавых побед</p><div class="price">3000 ₽</div></div>
+                <div class="service-card"><h3>РЕКЛАМА В ШОРТС</h3><p>Кровавая реклама в коротких видео</p><div class="price">800 ₽</div></div>
+                <div class="service-card"><h3>РЕКЛАМА НА СТРИМЕ</h3><p>Упоминание во время кровавого ритуала</p><div class="price">200 ₽</div></div>
+            </div>
+        </section>
+
+        <div class="donate-section">
+            <h2>ПРИНЕСТИ ЖЕРТВУ</h2>
+            <p>Ваши дары питают кровавый ритуал, позволяя тени становиться гуще, а трансляциям — ещё более жуткими и завораживающими.</p>
+            <a href="https://www.donationalerts.com/r/chesw_" class="donate-button" target="_blank" rel="noopener noreferrer">СОВЕРШИТЬ ЖЕРТВОПРИНОШЕНИЕ</a>
+            <p style="margin-top: 20px; font-size:0.85em; color:#ffb3b3;">Безопасное жертвоприношение через DonationAlerts</p>
+        </div>
+
+        <footer>
+            <div class="footer-links">
+                <a href="https://live.vkvideo.ru/tgk_s3xyem" target="_blank" rel="noopener noreferrer">VK ЭФИР</a>
+                <a href="https://t.me/tgkCHESW" target="_blank" rel="noopener noreferrer">ТЕЛЕГРАМ</a>
+                <a href="https://www.donationalerts.com/r/chesw_" target="_blank" rel="noopener noreferrer">ЖЕРТВА</a>
+            </div>
+            <p>© 2024 КРОВАВАЯ ЛУНА CHESWQ. ТЕНЬ НЕ СПИТ.</p>
+            <p style="margin-top: 15px; font-size: 0.8em; color: #b38585;">КРОВЬ • ТЕНЬ • ВЕЧНОСТЬ</p>
+        </footer>
+    </div>
+
+    <!-- Подключаем библиотеку частиц -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Инициализация частиц
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof particlesJS !== 'undefined') {
+                particlesJS('particles-js', {
+                    particles: {
+                        number: { 
+                            value: window.innerWidth < 768 ? 60 : 90, 
+                            density: { enable: true, value_area: 800 } 
+                        },
+                        color: { value: ["#ff0000", "#8a0000", "#ff0066"] },
+                        shape: { type: "circle" },
+                        opacity: { value: 0.5, random: true },
+                        size: { value: 3, random: true },
+                        line_linked: {
+                            enable: true,
+                            distance: 150,
+                            color: "#ff0000",
+                            opacity: 0.2,
+                            width: 1
+                        },
+                        move: {
+                            enable: true,
+                            speed: 2,
+                            direction: "none",
+                            random: true,
+                            out_mode: "out",
+                        }
+                    },
+                    interactivity: {
+                        detect_on: "canvas",
+                        events: {
+                            onhover: { enable: true, mode: "repulse" },
+                            onclick: { enable: true, mode: "push" }
+                        }
+                    }
+                });
+            }
+            
+            // Плавная прокрутка
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
